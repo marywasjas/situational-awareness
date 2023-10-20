@@ -27,6 +27,7 @@
               type="primary"
               @click="onSubmit"
             >搜索</el-button>
+            <el-button @click="resetForm">重置</el-button>
             <el-button :disabled="multipleSelection.length<=0">删除</el-button>
             <el-button class="margin-right10" :disabled="multipleSelection.length<=0">导出</el-button>
             <el-popover trigger="click">
@@ -104,32 +105,40 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="权属单位">
+            <el-select
+              v-model="form.unit"
+              placeholder="请选择--"
+            >
+              <el-option
+                label="集团本部"
+                value="集团本部"
+              />
+              <el-option
+                label="光大银行"
+                value="光大银行"
+              />
+              <el-option
+                label="光大证券"
+                value="光大证券"
+              />
+              <el-option
+                label="光大保险"
+                value="光大保险"
+              />
+              <el-option
+                label="光大信托"
+                value="光大信托"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="受害IP">
             <el-input v-model="form.sufferIp" />
           </el-form-item>
           <el-form-item label="攻击IP">
             <el-input v-model="form.attackIp" />
           </el-form-item>
-          <el-form-item label="告警设备">
-            <el-select
-              v-model="form.device"
-              placeholder="请选择--"
-            >
-              <el-option
-                label="设备1"
-                value="设备1"
-              />
-              <el-option
-                label="设备2"
-                value="设备2"
-              />
-              <el-option
-                label="设备3"
-                value="设备3"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="威胁级别">
+          <!-- <el-form-item label="威胁级别">
             <el-select
               v-model="form.threaten"
               placeholder="请选择--"
@@ -151,7 +160,7 @@
                 value="低危"
               />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
         </div>
       </el-form>
     </div>
@@ -214,14 +223,14 @@ export default {
       isOpen: false,
       keyWordPlaceHolder: '输入高级表达式，例如:attack_sip="1.1.1.1" AND (threat_type IN ("APT事件","端口扫描") OR threat_name LIKE("暴力破解","弱口令"))',
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        keyword: '',
+        time: [],
+        level: '',
+        source: '',
+        type: '',
+        unit: '',
+        sufferIp: '',
+        attackIp: ''
       },
       tableData: [],
       tableColumnList: [
@@ -349,6 +358,18 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!')
+    },
+    resetForm() {
+      this.form = {
+        keyword: '',
+        time: [],
+        level: '',
+        source: '',
+        type: '',
+        unit: '',
+        sufferIp: '',
+        attackIp: ''
+      }
     },
     getList() {
       this.tableLoading = true
