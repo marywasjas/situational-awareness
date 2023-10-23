@@ -370,7 +370,6 @@ export default {
     },
     getList() {
       this.tableLoading = true;
-      console.log(this.form.date);
       getAlarmList({
         statement: this.form.keyword ? this.form.keyword : null, // 自定义查询条件
         startTime: this.form.date?.[0] ? this.form.date?.[0].getTime() : null, // 查询范围起始时间
@@ -380,7 +379,7 @@ export default {
         sourceIp: this.form.attackIp ? this.form.attackIp : null, // 攻击源ip
         targetIp: this.form.sufferIp ? this.form.sufferIp : null, // 受害ip
         deviceType: this.form.device ? this.form.device : null, // 告警设备
-        company: null, // 权属单位
+        company: this.form.unit ? this.form.unit : null, // 权属单位
         pageIndex: this.pageNo,
         pageSize: this.pageSize,
       })
