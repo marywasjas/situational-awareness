@@ -14,7 +14,7 @@ module.exports = {
   // add your custom rules here
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
-    "vue/max-attributes-per-line": [2, {
+    "vue/max-attributes-per-line": ['warn', {
       "singleline": 10,
       "multiline": {
         "max": 1,
@@ -37,7 +37,7 @@ module.exports = {
     'camelcase': [0, {
       'properties': 'always'
     }],
-    'comma-dangle': [2, 'never'],
+    'comma-dangle': 'off',
     'comma-spacing': [2, {
       'before': false,
       'after': true
@@ -162,17 +162,14 @@ module.exports = {
       }
     }],
     'padded-blocks': [2, 'never'],
-    'quotes': [2, 'single', {
-      'avoidEscape': true,
-      'allowTemplateLiterals': true
-    }],
-    'semi': [2, 'never'],
+    'quotes': 'off',
+    'semi': 'off',
     'semi-spacing': [2, {
       'before': false,
-      'after': true
+      'after': false
     }],
     'space-before-blocks': [2, 'always'],
-    'space-before-function-paren': [2, 'never'],
+    'space-before-function-paren': 'off',
     'space-in-parens': [2, 'never'],
     'space-infix-ops': 2,
     'space-unary-ops': [2, {

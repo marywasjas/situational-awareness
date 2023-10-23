@@ -1,38 +1,39 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form
-        ref="form"
-        :model="form"
-        label-width="80px"
-        label-suffix=":"
-      >
+      <el-form ref="form" :model="form" label-width="80px" label-suffix=":">
         <div class="flex-center-between">
-          <el-form-item
-            label=""
-            label-width="0"
-            class="flex1 margin-right10"
-          >
+          <el-form-item label="" label-width="0" class="flex1 margin-right10">
             <el-input
               v-model="form.keyword"
               :placeholder="keyWordPlaceHolder"
             />
           </el-form-item>
-          <el-form-item
-            label=""
-            label-width="0"
-          >
-            <el-button :icon="isOpen?'el-icon-arrow-up':'el-icon-arrow-down'" @click="isOpen = !isOpen" />
+          <el-form-item label="" label-width="0">
             <el-button
-              type="primary"
-              @click="onSubmit"
-            >搜索</el-button>
+              :icon="isOpen ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
+              @click="isOpen = !isOpen"
+            />
+            <el-button type="primary" @click="onSubmit">搜索</el-button>
             <el-button @click="resetForm">重置</el-button>
-            <el-button :disabled="multipleSelection.length<=0">删除</el-button>
-            <el-button class="margin-right10" :disabled="multipleSelection.length<=0">导出</el-button>
+            <el-button
+              :disabled="multipleSelection.length <= 0"
+            >删除</el-button>
+            <el-button
+              class="margin-right10"
+              :disabled="multipleSelection.length <= 0"
+            >导出</el-button>
             <el-popover trigger="click">
-              <el-checkbox-group v-model="checkedTableColumnList" class="flex-column">
-                <el-checkbox v-for="col in tableColumnList" :key="col.label" :label="col.label" :disabled="col.label==='序号'">{{ col.label }}</el-checkbox>>
+              <el-checkbox-group
+                v-model="checkedTableColumnList"
+                class="flex-column"
+              >
+                <el-checkbox
+                  v-for="col in tableColumnList"
+                  :key="col.label"
+                  :label="col.label"
+                  :disabled="col.label === '序号'"
+                >{{ col.label }}</el-checkbox>>
               </el-checkbox-group>
               <el-button slot="reference" icon="el-icon-s-tools" />
             </el-popover>
@@ -42,94 +43,43 @@
           <el-form-item label="告警时间">
             <el-date-picker
               v-model="form.date"
-              type="daterange"
+              type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
             />
           </el-form-item>
           <el-form-item label="告警级别">
-            <el-select
-              v-model="form.level"
-              placeholder="请选择--"
-            >
-              <el-option
-                label="低"
-                value="低"
-              />
-              <el-option
-                label="中"
-                value="中"
-              />
-              <el-option
-                label="高"
-                value="高"
-              />
+            <el-select v-model="form.level" placeholder="请选择--">
+              <el-option label="低" value="低" />
+              <el-option label="中" value="中" />
+              <el-option label="高" value="高" />
             </el-select>
           </el-form-item>
-          <el-form-item label="告警来源">
-            <el-select
-              v-model="form.source"
-              placeholder="请选择--"
-            >
-              <el-option
-                label="来源1"
-                value="来源1"
-              />
-              <el-option
-                label="来源2"
-                value="来源2"
-              />
-              <el-option
-                label="来源3"
-                value="来源3"
-              />
+          <!-- <el-form-item label="告警来源">
+            <el-select v-model="form.source" placeholder="请选择--">
+              <el-option label="来源1" value="来源1" />
+              <el-option label="来源2" value="来源2" />
+              <el-option label="来源3" value="来源3" />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="告警类型">
-            <el-select
-              v-model="form.type"
-              placeholder="请选择--"
-            >
+            <el-select v-model="form.type" placeholder="请选择--">
               <el-option
-                label="类型1"
-                value="类型1"
-              />
-              <el-option
-                label="类型2"
-                value="类型2"
-              />
-              <el-option
-                label="类型3"
-                value="类型3"
+                v-for="(item, index) in alarmTypeOption"
+                :key="index"
+                :label="item"
+                :value="item"
               />
             </el-select>
           </el-form-item>
           <el-form-item label="权属单位">
-            <el-select
-              v-model="form.unit"
-              placeholder="请选择--"
-            >
-              <el-option
-                label="集团本部"
-                value="集团本部"
-              />
-              <el-option
-                label="光大银行"
-                value="光大银行"
-              />
-              <el-option
-                label="光大证券"
-                value="光大证券"
-              />
-              <el-option
-                label="光大保险"
-                value="光大保险"
-              />
-              <el-option
-                label="光大信托"
-                value="光大信托"
-              />
+            <el-select v-model="form.unit" placeholder="请选择--">
+              <el-option label="集团本部" value="集团本部" />
+              <el-option label="光大银行" value="光大银行" />
+              <el-option label="光大证券" value="光大证券" />
+              <el-option label="光大保险" value="光大保险" />
+              <el-option label="光大信托" value="光大信托" />
             </el-select>
           </el-form-item>
           <el-form-item label="受害IP">
@@ -137,6 +87,16 @@
           </el-form-item>
           <el-form-item label="攻击IP">
             <el-input v-model="form.attackIp" />
+          </el-form-item>
+          <el-form-item label="告警设备">
+            <el-select v-model="form.device" placeholder="请选择--">
+              <el-option
+                v-for="(item, index) in deviceOption"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <!-- <el-form-item label="威胁级别">
             <el-select
@@ -173,39 +133,52 @@
       <el-table
         key="id"
         :data="tableData"
-        style="width: 100%;"
+        style="width: 100%"
         empty-text="无告警数据"
         stripe
         :header-cell-style="{ backgroundColor: '#eceff3', color: '#606266' }"
-
         @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="55" />
+        <el-table-column type="index" width="55" label="序号" />
         <el-table-column
-          type="selection"
-          width="55"
-        />
-        <el-table-column
-          v-for="(col) in tableColumnShowList"
+          v-for="col in tableColumnShowList"
           :key="col.id"
           :label="col.label"
           :prop="col.id"
           :sortable="col.sortable"
           :width="col.width"
         >
-          <template slot-scope="{row}">
-            <span>{{ row[col.id] }}</span>
+          <template slot-scope="{ row }">
+            <div v-if="col.id == 'attackResult'">
+              {{ row[col.id] == 0 ? "失败" : "成功" }}
+            </div>
+            <div v-else-if="col.id == 'isBanned'">
+              {{ row[col.id] == 0 ? "否" : "是" }}
+            </div>
+            <div v-else-if="col.id == 'isBlocked'">
+              {{ row[col.id] == 0 ? "否" : "是" }}
+            </div>
+
+            <span v-else>{{ row[col.id] ? row[col.id] : "-" }}</span>
           </template>
         </el-table-column>
-
+        <el-table-column fixed="right" label="操作" width="120">
+          <template slot-scope="{ row }">
+            <el-button type="text" size="small" @click="deleteRow(row)">
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
-        v-if="tableData.length>0"
+        v-if="tableData.length > 0"
         class="margin-top10 text-right"
-        :current-page="page.page"
-        :page-sizes="[10, 20, 30, 40,50,100]"
-        :page-size="page.limit"
+        :current-page="pageNo"
+        :page-sizes="[10, 20, 30, 40, 50, 100]"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
+        :total="total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -214,188 +187,256 @@
 </template>
 
 <script>
+import {
+  getAlarmType,
+  getAlarmDevice,
+  getAlarmList,
+  deleteAlarm,
+  batchDeleteAlarm,
+} from "@/api/alarm";
 export default {
-  name: 'Alarm',
-  components: { },
-  directives: { },
+  name: "Alarm",
+  components: {},
+  directives: {},
   data() {
     return {
       isOpen: false,
-      keyWordPlaceHolder: '输入高级表达式，例如:attack_sip="1.1.1.1" AND (threat_type IN ("APT事件","端口扫描") OR threat_name LIKE("暴力破解","弱口令"))',
+      keyWordPlaceHolder:
+        '输入高级表达式，例如:attack_sip="1.1.1.1" AND (threat_type IN ("APT事件","端口扫描") OR threat_name LIKE("暴力破解","弱口令"))',
       form: {
-        keyword: '',
-        time: [],
-        level: '',
-        source: '',
-        type: '',
-        unit: '',
-        sufferIp: '',
-        attackIp: ''
+        keyword: "",
+        date: [],
+        level: "",
+        type: "",
+        unit: "",
+        sufferIp: "",
+        attackIp: "",
+        device: "",
       },
+      alarmTypeOption: [],
+      deviceOption: [],
       tableData: [],
       tableColumnList: [
         {
-          id: 'index',
-          label: '序号'
+          id: "time",
+          label: "发生告警时间",
         },
         {
-          id: 'time',
-          label: '发生告警时间'
+          id: "institution_short",
+          label: "所属公司简称(权属单位)",
         },
         {
-          id: 'institution_short',
-          label: '所属公司简称(权属单位)'
+          id: "sourceIp",
+          label: "源ip",
         },
         {
-          id: 'source_ip',
-          label: '源ip'
+          id: "sourcePort",
+          label: "源端口",
         },
         {
-          id: 'source_port',
-          label: '源端口'
+          id: "city",
+          label: "源ip城市",
         },
         {
-          id: 'city',
-          label: '源ip城市'
+          id: "country",
+          label: "源ip国家",
         },
         {
-          id: 'country',
-          label: '源ip国家'
+          id: "destinationIp",
+          label: "目的ip",
         },
         {
-          id: 'destination_ip',
-          label: '目的ip'
+          id: "destinationPort",
+          label: "目的端口",
         },
         {
-          id: 'destination_port',
-          label: '目的端口'
+          id: "destinationCity",
+          label: "目的ip城市",
         },
         {
-          id: 'destination_city',
-          label: '目的ip城市'
+          id: "destinationCountry",
+          label: "目的ip国家",
         },
         {
-          id: 'destination_country',
-          label: '目的ip国家'
+          id: "protocol",
+          label: "协议类型",
         },
         {
-          id: 'protocol',
-          label: '协议类型'
+          id: "targetSystem",
+          label: "关联业务",
         },
         {
-          id: 'target_system',
-          label: '关联业务'
+          id: "attackType_sub",
+          label: "告警类型",
         },
         {
-          id: 'attack_type_sub',
-          label: '告警类型'
+          id: "attackLevel",
+          label: "攻击告警级别",
         },
         {
-          id: 'attack_level',
-          label: '攻击告警级别'
+          id: "attackType_name",
+          label: "威胁名称",
         },
         {
-          id: 'attack_type_name',
-          label: '威胁名称'
+          id: "attackDetail",
+          label: "告警详情",
         },
         {
-          id: 'attack_detail',
-          label: '告警详情'
+          id: "attackResult",
+          label: "攻击结果",
         },
         {
-          id: 'attack_result',
-          label: '攻击结果'
+          id: "xff",
+          label: "xff代理",
         },
         {
-          id: 'xff',
-          label: 'xff代理'
+          id: "attackNum",
+          label: "攻击次数",
         },
         {
-          id: 'attack_num',
-          label: '攻击次数'
+          id: "deviceType",
+          label: "告警设备",
         },
         {
-          id: 'device_type',
-          label: '告警设备'
+          id: "deviceId",
+          label: "设备id",
         },
         {
-          id: 'device_id',
-          label: '设备id'
+          id: "isBanned",
+          label: "是否阻断",
         },
         {
-          id: 'is_banned',
-          label: '是否阻断'
+          id: "isBlocked",
+          label: "是否禁用",
         },
-        {
-          id: 'is_blocked',
-          label: '是否禁用'
-        }
       ],
+      pageNo: 1,
+      pageSize: 20,
+      total: 0,
       tableLoading: false,
-      page: {
-        page: 1,
-        limit: 20,
-        total: 0
-      },
+      checkedTableColumnList: [
+        "序号",
+        "发生告警时间",
+        "所属公司简称(权属单位)",
+        "源ip",
+        "目的ip",
+        "关联业务",
+        "告警类型",
+        "攻击告警级别",
+        "告警详情",
+        "攻击结果",
+        "告警设备",
+      ],
+
       multipleSelection: [],
-      checkedTableColumnList: ['序号', '发生告警时间', '所属公司简称(权属单位)', '源ip', '目的ip', '关联业务', '告警类型', '攻击告警级别', '告警详情', '攻击结果', '告警设备']
-    }
+    };
   },
   computed: {
     tableColumnShowList() {
-      const list = []
-      this.tableColumnList.map(el => {
+      const list = [];
+      this.tableColumnList.map((el) => {
         if (this.checkedTableColumnList.includes(el.label) > 0) {
-          list.push(el)
+          list.push(el);
         }
-      })
-      return list
-    }
+      });
+      return list;
+    },
   },
   created() {
-    this.getList()
+    this.getAlarmType();
+    this.getAlarmDevice();
+    this.getList();
   },
   methods: {
-    onSubmit() {
-      console.log('submit!')
+    getAlarmType() {
+      getAlarmType()
+        .then((res) => {
+          this.alarmTypeOption = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAlarmDevice() {
+      getAlarmDevice()
+        .then((res) => {
+          this.deviceOption = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getList() {
+      this.tableLoading = true;
+      console.log(this.form.date);
+      getAlarmList({
+        statement: this.form.keyword ? this.form.keyword : null, // 自定义查询条件
+        startTime: this.form.date?.[0] ? this.form.date?.[0].getTime() : null, // 查询范围起始时间
+        endTime: this.form.date?.[1] ? this.form.date?.[1].getTime() : null, // 查询范围截止时间
+        attackLevel: this.form.level ? this.form.level : null, // 告警级别 目前暂定为低中高三级
+        attackTypeSub: this.form.type ? this.form.type : null, // 告警类型
+        sourceIp: this.form.attackIp ? this.form.attackIp : null, // 攻击源ip
+        targetIp: this.form.sufferIp ? this.form.sufferIp : null, // 受害ip
+        deviceType: this.form.device ? this.form.device : null, // 告警设备
+        company: null, // 权属单位
+        pageIndex: this.pageNo,
+        pageSize: this.pageSize,
+      })
+        .then((res) => {
+          this.tableData = res.logList;
+          this.total = res.count;
+          this.tableLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.pageNo = 1;
+      this.getList();
+    },
+    handleCurrentChange(val) {
+      this.pageNo = val;
+      this.getList();
+    },
+    deleteRow(row) {
+      deleteAlarm({
+        id: row.id,
+      })
+        .then((res) => {
+          this.$message.success("删除成功");
+          this.getList();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    handleSelectionChange(val) {
+      console.log(val);
+      this.multipleSelection = val;
     },
     resetForm() {
       this.form = {
-        keyword: '',
+        keyword: "",
         time: [],
-        level: '',
-        source: '',
-        type: '',
-        unit: '',
-        sufferIp: '',
-        attackIp: ''
-      }
+        level: "",
+        source: "",
+        type: "",
+        unit: "",
+        sufferIp: "",
+        attackIp: "",
+      };
     },
-    getList() {
-      this.tableLoading = true
-      this.tableData = [
-        {
-          index: 1,
-          time: '2023/10/18 16:29:34'
-        }
-      ]
-      this.page.total = 1
-      this.tableLoading = false
+
+    onSubmit() {
+      this.getList();
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
-    }
-  }
-}
+  },
+};
 </script>
 <style lang="scss" scoped>
-.expandDiv{
+.expandDiv {
   background: rgb(236, 239, 243);
   padding: 10px;
   border-radius: 4px;
