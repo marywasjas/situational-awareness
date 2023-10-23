@@ -18,11 +18,14 @@
             <el-button @click="resetForm">重置</el-button>
             <el-button
               :disabled="multipleSelection.length <= 0"
-            >删除</el-button>
+              @click="handleDelete"
+              >删除</el-button
+            >
             <el-button
               class="margin-right10"
               :disabled="multipleSelection.length <= 0"
-            >导出</el-button>
+              >导出</el-button
+            >
             <el-popover trigger="click">
               <el-checkbox-group
                 v-model="checkedTableColumnList"
@@ -33,7 +36,8 @@
                   :key="col.label"
                   :label="col.label"
                   :disabled="col.label === '序号'"
-                >{{ col.label }}</el-checkbox>>
+                  >{{ col.label }}</el-checkbox
+                >>
               </el-checkbox-group>
               <el-button slot="reference" icon="el-icon-s-tools" />
             </el-popover>
@@ -192,7 +196,6 @@ import {
   getAlarmDevice,
   getAlarmList,
   deleteAlarm,
-  batchDeleteAlarm,
 } from "@/api/alarm";
 export default {
   name: "Alarm",
@@ -327,7 +330,6 @@ export default {
         "攻击结果",
         "告警设备",
       ],
-
       multipleSelection: [],
     };
   },
@@ -402,7 +404,24 @@ export default {
     },
     deleteRow(row) {
       deleteAlarm({
-        id: row.id,
+        ids: row.id,
+      })
+        .then((res) => {
+          this.$message.success("删除成功");
+          this.getList();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    handleDelete() {
+      const arr = [];
+      this.multipleSelection.map((el) => {
+        arr.push(el.id);
+      });
+      console.log(arr);
+      deleteAlarm({
+        ids: `${arr}`,
       })
         .then((res) => {
           this.$message.success("删除成功");
@@ -413,7 +432,6 @@ export default {
         });
     },
     handleSelectionChange(val) {
-      console.log(val);
       this.multipleSelection = val;
     },
     resetForm() {
