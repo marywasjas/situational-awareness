@@ -419,7 +419,6 @@ export default {
       this.multipleSelection.map((el) => {
         arr.push(el.id);
       });
-      console.log(arr);
       deleteAlarm({
         ids: `${arr}`,
       })
