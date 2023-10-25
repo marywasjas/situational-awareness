@@ -38,3 +38,11 @@ export function batchDeleteAlarm(params) {
   })
 }
 
+export function exportAlarm() {
+  return request({
+    url: '/deviceLog/exportExcel',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+

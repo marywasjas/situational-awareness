@@ -21,9 +21,7 @@
               @click="handleDelete"
               >删除</el-button
             >
-            <el-button
-              class="margin-right10"
-              :disabled="multipleSelection.length <= 0"
+            <el-button class="margin-right10" @click="handleExport"
               >导出</el-button
             >
             <el-popover trigger="click">
@@ -196,6 +194,7 @@ import {
   getAlarmDevice,
   getAlarmList,
   deleteAlarm,
+  exportAlarm,
 } from "@/api/alarm";
 export default {
   name: "Alarm",
@@ -447,6 +446,24 @@ export default {
 
     onSubmit() {
       this.getList();
+    },
+    handleExport() {
+      exportAlarm()
+        .then((res) => {
+          const data = new Blob([res], {
+            type: "currentProject/vnd.ms-excel;charset=utf-8",
+          });
+          const dowmloadUrl = window.URL.createObjectURL(data);
+          const link = document.createElement("a");
+          link.href = dowmloadUrl;
+          link.download = `告警日志导出表.xlsx`;
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
