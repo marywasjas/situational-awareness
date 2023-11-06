@@ -196,6 +196,7 @@ export default {
               this.dialogLoading = false
               this.dialogFormVisible = false
               this.$message.success("新增成功");
+              location.reload();
               this.getList()
             }).catch(err => {
               this.dialogLoading = false
