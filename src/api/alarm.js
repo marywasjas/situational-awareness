@@ -9,7 +9,7 @@ export function getAlarmType() {
 
 export function getAlarmDevice() {
   return request({
-    url: '/deviceLog/getAllDeviceName',
+    url: '/device/getAllDeviceName',
     method: 'get'
   })
 }
@@ -38,11 +38,41 @@ export function batchDeleteAlarm(params) {
   })
 }
 
-export function exportAlarm() {
+export function exportAlarm(params) {
   return request({
     url: '/deviceLog/exportExcel',
     method: 'get',
+    params,
     responseType: 'blob'
+  })
+}
+
+export function getAlarmDeviceAll() {
+  return request({
+    url: '/device/getAllDevice',
+    method: 'get'
+  })
+}
+
+export function deleteAlarmDevice(params) {
+  return request({
+    url: `/device/delete/id`,
+    method: 'get',
+    params
+  })
+}
+export function addAlarmDevice(data) {
+  return request({
+    url: `/device/add`,
+    method: 'post',
+    data
+  })
+}
+export function updateAlarmDevice(data) {
+  return request({
+    url: `/device/update`,
+    method: 'post',
+    data
   })
 }
 

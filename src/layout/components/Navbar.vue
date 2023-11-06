@@ -1,14 +1,16 @@
 <template>
   <div class="navbar">
-    <div class="header-left">
+    <!-- <div class="header-left">
       <img :src="logoSrc" class="header-logo">
       <h1 class="header-title">{{ title }} </h1>
       <h3 class="margin-left10">{{ routerName }}</h3>
+    </div> -->
+    <div>
+      <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+
+      <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+
     </div>
-
-    <!-- <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /> -->
-
-    <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
@@ -54,8 +56,8 @@
 <script>
 import logoSrc from '@/assets/logo/logo.png'
 import { mapGetters } from 'vuex'
-// import Breadcrumb from '@/components/Breadcrumb'
-// import Hamburger from '@/components/Hamburger'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
 // import ErrorLog from '@/components/ErrorLog'
 // import Screenfull from '@/components/Screenfull'
 // import SizeSelect from '@/components/SizeSelect'
@@ -63,8 +65,8 @@ import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    // Breadcrumb,
-    // Hamburger,
+    Breadcrumb,
+    Hamburger,
     // ErrorLog,
     // Screenfull,
     // SizeSelect,
@@ -101,7 +103,7 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  height: 80px;
+  height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
@@ -109,7 +111,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 ;
   .header-left{
     display: flex;
     align-items: center;
@@ -182,9 +184,9 @@ export default {
         height: 100%;
         .user-avatar{
           margin-right: 5px;
-          font-size: 30px;
-          width: 50px;
-          height: 50px;
+          font-size: 20px;
+          width: 30px;
+          height: 30px;
           display: flex;
           align-items: center;
           justify-content: center;

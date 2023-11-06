@@ -36,7 +36,6 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js'),
     proxy: {
       '/dev-api': {
         target: 'http://43.143.230.232:8801',
@@ -44,7 +43,7 @@ module.exports = {
         pathRewrite: {
           '^/dev-api': ''
         },
-        logLevel: 'debug'
+        logLevel: 'debug',
       }
     },
 

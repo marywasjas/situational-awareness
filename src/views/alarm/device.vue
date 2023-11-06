@@ -90,7 +90,7 @@
           <el-form-item label="攻击IP">
             <el-input v-model="form.attackIp" />
           </el-form-item>
-          <el-form-item label="告警设备">
+          <!-- <el-form-item label="告警设备">
             <el-select v-model="form.device" placeholder="请选择--">
               <el-option
                 v-for="(item, index) in deviceOption"
@@ -99,7 +99,7 @@
                 :value="item"
               />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- <el-form-item label="威胁级别">
             <el-select
               v-model="form.threaten"
@@ -345,7 +345,7 @@ export default {
   },
   created() {
     this.getAlarmType();
-    this.getAlarmDevice();
+    this.form.device = this.$route.meta.title ? this.$route.meta.title : null
     this.getList();
   },
   methods: {
@@ -369,7 +369,6 @@ export default {
     },
     getList() {
       this.tableLoading = true;
-      console.log(this.form.date)
       getAlarmList({
         statement: this.form.keyword ? this.form.keyword : null, // 自定义查询条件
         startTime: this.form.date?.[0] ? this.form.date?.[0] : null, // 查询范围起始时间
@@ -425,20 +424,31 @@ export default {
       });
     },
     handleDelete() {
-      const arr = [];
-      this.multipleSelection.map((el) => {
-        arr.push(el.id);
-      });
-      deleteAlarm({
-        ids: `${arr}`,
-      })
-        .then((res) => {
-          this.$message.success("删除成功");
-          this.getList();
-        })
-        .catch((err) => {
-          console.log(err);
+      this.$confirm('此操作将删除该设备, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const arr = [];
+        this.multipleSelection.map((el) => {
+          arr.push(el.id);
         });
+        deleteAlarm({
+          ids: `${arr}`,
+        })
+          .then((res) => {
+            this.$message.success("删除成功");
+            this.getList();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -460,7 +470,9 @@ export default {
       this.getList();
     },
     handleExport() {
-      exportAlarm()
+      exportAlarm({
+        deviceType: this.form.device ? this.form.device : null
+      })
         .then((res) => {
           const data = new Blob([res], {
             type: "currentProject/vnd.ms-excel;charset=utf-8",

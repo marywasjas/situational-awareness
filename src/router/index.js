@@ -70,19 +70,39 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/alarm',
-    children: [
-      {
-        path: 'alarm',
-        component: () => import('@/views/alarm/index'),
-        name: 'Alarm',
-        meta: { title: '告警中心', icon: 'el-icon-message-solid', affix: true }
-      }
-    ]
-  }
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/alarm',
+  //   meta: { title: '告警列表', icon: 'el-icon-message-solid', affix: true },
+  //   children: [
+  //     {
+  //       path: 'alarmDevice1',
+  //       component: () => import('@/views/device/index'),
+  //       name: 'Alarm',
+  //       meta: { title: '设备1', affix: true }
+  //     },
+  //     {
+  //       path: 'alarm',
+  //       component: () => import('@/views/alarm/index'),
+  //       name: 'Alarm',
+  //       meta: { title: '全部', affix: true }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/device',
+  //   component: Layout,
+  //   redirect: '/device/index',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/device/index'),
+  //       name: 'Device',
+  //       meta: { title: '设备管理', affix: true }
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/documentation',
   //   component: Layout,

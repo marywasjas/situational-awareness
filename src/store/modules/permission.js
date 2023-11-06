@@ -1,5 +1,7 @@
 import { asyncRoutes, constantRoutes } from '@/router'
-
+import { getAlarmDeviceAll } from '@/api/alarm'
+/* Layout */
+import Layout from '@/layout'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -58,7 +60,56 @@ const actions = {
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
-  }
+  },
+  generateRoutesRoute({ commit }, roles) {
+    return new Promise((resolve, reject) => {
+      getAlarmDeviceAll().then(res => {
+        const data = res || []
+        const listRoute = []
+        data.filter(item => item.isShow !== '0').map(el => {
+          listRoute.push({
+            path: `alarmDevice${el.deviceId}`,
+            component: () => import('@/views/alarm/device'),
+            name: `AlarmDevice${el.deviceId}`,
+            meta: { title: el.deviceName, affix: true }
+          })
+        })
+        const accessedRoutes = [
+          {
+            path: '/',
+            component: Layout,
+            redirect: '/alarm',
+            meta: { title: '告警列表', icon: 'el-icon-message-solid', affix: true },
+            children: [...listRoute,
+              {
+                path: 'alarm',
+                component: () => import('@/views/alarm/index'),
+                name: 'Alarm',
+                meta: { title: '全部', affix: true }
+              }
+            ]
+          },
+          {
+            path: '/device',
+            component: Layout,
+            redirect: '/device/index',
+            children: [
+              {
+                path: 'index',
+                component: () => import('@/views/device/index'),
+                name: 'Device',
+                meta: { title: '设备管理', affix: true, icon: 'el-icon-setting', }
+              }
+            ]
+          },
+        ]
+        commit('SET_ROUTES', accessedRoutes)
+        resolve(accessedRoutes)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 }
 
 export default {
