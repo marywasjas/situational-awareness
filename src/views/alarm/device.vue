@@ -76,13 +76,14 @@
             </el-select>
           </el-form-item>
           <el-form-item label="权属单位">
-            <el-select v-model="form.unit" placeholder="请选择--">
+            <el-input v-model="form.unit" />
+            <!-- <el-select v-model="form.unit" placeholder="请选择--">
               <el-option label="集团本部" value="集团本部" />
               <el-option label="光大银行" value="光大银行" />
               <el-option label="光大证券" value="光大证券" />
               <el-option label="光大保险" value="光大保险" />
               <el-option label="光大信托" value="光大信托" />
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <el-form-item label="受害IP">
             <el-input v-model="form.sufferIp" />
@@ -401,7 +402,7 @@ export default {
       this.getList();
     },
     deleteRow(row) {
-      this.$confirm('此操作将删除该设备, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -424,7 +425,7 @@ export default {
       });
     },
     handleDelete() {
-      this.$confirm('此操作将删除该设备, 是否继续?', '提示', {
+      this.$confirm('此操作将删除所选数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -471,7 +472,15 @@ export default {
     },
     handleExport() {
       exportAlarm({
-        deviceType: this.form.device ? this.form.device : null
+        statement: this.form.keyword ? this.form.keyword : null, // 自定义查询条件
+        startTime: this.form.date?.[0] ? this.form.date?.[0] : null, // 查询范围起始时间
+        endTime: this.form.date?.[1] ? this.form.date?.[1] : null, // 查询范围截止时间
+        attackLevel: this.form.level ? this.form.level : null, // 告警级别 目前暂定为低中高三级
+        attackTypeSub: this.form.type ? this.form.type : null, // 告警类型
+        sourceIp: this.form.attackIp ? this.form.attackIp : null, // 攻击源ip
+        targetIp: this.form.sufferIp ? this.form.sufferIp : null, // 受害ip
+        deviceType: this.form.device ? this.form.device : null, // 告警设备
+        company: this.form.unit ? this.form.unit : null, // 权属单位
       })
         .then((res) => {
           const data = new Blob([res], {
@@ -480,7 +489,7 @@ export default {
           const dowmloadUrl = window.URL.createObjectURL(data);
           const link = document.createElement("a");
           link.href = dowmloadUrl;
-          link.download = `告警日志导出表.xlsx`;
+          link.download = `集团_${this.form.device}告警日志导出表.xlsx`;
           link.click();
           link.remove();
           window.URL.revokeObjectURL(res);

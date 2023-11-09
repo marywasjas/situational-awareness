@@ -75,4 +75,32 @@ export function updateAlarmDevice(data) {
     data
   })
 }
-
+// 子公司告警类型
+export function getAlarmSubType() {
+  return request({
+    url: '/alarmLog/getAllAlarmType',
+    method: 'get'
+  })
+}
+export function getAlarmSubList(params) {
+  return request({
+    url: '/alarmLog/queryAlarmLog',
+    method: 'get',
+    params
+  })
+}
+export function deleteSubAlarm(params) {
+  return request({
+    url: '/alarmLog/deleteByIds',
+    method: 'get',
+    params
+  })
+}
+export function exportAlarmSub(params) {
+  return request({
+    url: '/alarmLog/exportExcel',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}

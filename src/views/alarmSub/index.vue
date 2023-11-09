@@ -76,14 +76,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="权属单位">
-            <el-input v-model="form.unit" />
-            <!-- <el-select v-model="form.unit" placeholder="请选择--">
-              <el-option label="集团本部" value="集团本部" />
-              <el-option label="光大银行" value="光大银行" />
-              <el-option label="光大证券" value="光大证券" />
-              <el-option label="光大保险" value="光大保险" />
-              <el-option label="光大信托" value="光大信托" />
-            </el-select> -->
+            <el-select v-model="form.unit" placeholder="请选择--">
+              <!-- <el-option label="集团本部" value="集团本部" /> -->
+              <el-option label="光大银行" value="YH" />
+              <el-option label="光大证券" value="ZQ" />
+              <el-option label="光大保险" value="BX" />
+              <el-option label="光大信托" value="XT" />
+            </el-select>
           </el-form-item>
           <el-form-item label="受害IP">
             <el-input v-model="form.sufferIp" />
@@ -91,7 +90,7 @@
           <el-form-item label="攻击IP">
             <el-input v-model="form.attackIp" />
           </el-form-item>
-          <el-form-item label="告警设备">
+          <!-- <el-form-item label="告警设备">
             <el-select v-model="form.device" placeholder="请选择--">
               <el-option
                 v-for="(item, index) in deviceOption"
@@ -100,7 +99,7 @@
                 :value="item"
               />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- <el-form-item label="威胁级别">
             <el-select
               v-model="form.threaten"
@@ -191,11 +190,10 @@
 
 <script>
 import {
-  getAlarmType,
-  getAlarmDevice,
-  getAlarmList,
-  deleteAlarm,
-  exportAlarm,
+  getAlarmSubType,
+  getAlarmSubList,
+  deleteSubAlarm,
+  exportAlarmSub,
 } from "@/api/alarm";
 export default {
   name: "Alarm",
@@ -222,96 +220,69 @@ export default {
       tableColumnList: [
         {
           id: "time",
-          label: "发生告警时间",
+          label: "发生时间",
         },
         {
           id: "institutionShort",
-          label: "所属公司简称(权属单位)",
+          label: "机构简称",
         },
         {
           id: "sourceIp",
-          label: "源ip",
+          label: "攻击源地址",
         },
         {
           id: "sourcePort",
-          label: "源端口",
+          label: "攻击源端口",
         },
         {
           id: "city",
-          label: "源ip城市",
+          label: "源ip所属城市",
         },
         {
           id: "country",
-          label: "源ip国家",
-        },
-        {
-          id: "destinationIp",
-          label: "目的ip",
-        },
-        {
-          id: "destinationPort",
-          label: "目的端口",
-        },
-        {
-          id: "destinationCity",
-          label: "目的ip城市",
-        },
-        {
-          id: "destinationCountry",
-          label: "目的ip国家",
+          label: "源ip所属国家",
         },
         {
           id: "protocol",
-          label: "协议类型",
+          label: "协议",
+        },
+        {
+          id: "destinationIp",
+          label: "攻击目的地址",
+        },
+        {
+          id: "destinationPort",
+          label: "攻击目的地址端口号",
+        },
+        {
+          id: "destinationCity",
+          label: "攻击目的城市",
+        },
+        {
+          id: "destinationCountry",
+          label: "攻击目的国家",
         },
         {
           id: "targetSystem",
-          label: "关联业务",
+          label: "目标系统",
         },
         {
           id: "attackTypeSub",
-          label: "告警类型",
+          label: "攻击类型",
         },
         {
           id: "attackLevel",
-          label: "攻击告警级别",
-        },
-        {
-          id: "attackType_name",
-          label: "威胁名称",
-        },
-        {
-          id: "attackDetail",
-          label: "告警详情",
-        },
-        {
-          id: "attackResult",
-          label: "攻击结果",
-        },
-        {
-          id: "xff",
-          label: "xff代理",
-        },
-        {
-          id: "attackNum",
-          label: "攻击次数",
-        },
-        {
-          id: "deviceType",
-          label: "告警设备",
-        },
-        {
-          id: "deviceId",
-          label: "设备id",
+          label: "告警级别",
         },
         {
           id: "isBanned",
-          label: "是否阻断",
+          label: "是否已封禁",
         },
         {
           id: "isBlocked",
-          label: "是否禁用",
+          label: "是否已阻断",
         },
+
       ],
       pageNo: 1,
       pageSize: 20,
@@ -319,16 +290,12 @@ export default {
       tableLoading: false,
       checkedTableColumnList: [
         "序号",
-        "发生告警时间",
-        "所属公司简称(权属单位)",
-        "源ip",
-        "目的ip",
-        "关联业务",
-        "告警类型",
-        "攻击告警级别",
-        "告警详情",
-        "攻击结果",
-        "告警设备",
+        "发生时间",
+        "机构简称",
+        "攻击源地址",
+        "攻击目的地址",
+        "攻击类型",
+        "告警级别",
       ],
       multipleSelection: [],
     };
@@ -346,23 +313,13 @@ export default {
   },
   created() {
     this.getAlarmType();
-    this.getAlarmDevice();
     this.getList();
   },
   methods: {
     getAlarmType() {
-      getAlarmType()
+      getAlarmSubType()
         .then((res) => {
           this.alarmTypeOption = res;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    getAlarmDevice() {
-      getAlarmDevice()
-        .then((res) => {
-          this.deviceOption = res;
         })
         .catch((err) => {
           console.log(err);
@@ -371,7 +328,7 @@ export default {
     getList() {
       this.tableLoading = true;
       console.log(this.form.date)
-      getAlarmList({
+      getAlarmSubList({
         statement: this.form.keyword ? this.form.keyword : null, // 自定义查询条件
         startTime: this.form.date?.[0] ? this.form.date?.[0] : null, // 查询范围起始时间
         endTime: this.form.date?.[1] ? this.form.date?.[1] : null, // 查询范围截止时间
@@ -408,7 +365,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteAlarm({
+        deleteSubAlarm({
           ids: row.id,
         })
           .then((res) => {
@@ -435,7 +392,7 @@ export default {
         this.multipleSelection.map((el) => {
           arr.push(el.id);
         });
-        deleteAlarm({
+        deleteSubAlarm({
           ids: `${arr}`,
         })
           .then((res) => {
@@ -472,7 +429,7 @@ export default {
       this.getList();
     },
     handleExport() {
-      exportAlarm({
+      exportAlarmSub({
         statement: this.form.keyword ? this.form.keyword : null, // 自定义查询条件
         startTime: this.form.date?.[0] ? this.form.date?.[0] : null, // 查询范围起始时间
         endTime: this.form.date?.[1] ? this.form.date?.[1] : null, // 查询范围截止时间
@@ -490,7 +447,7 @@ export default {
           const dowmloadUrl = window.URL.createObjectURL(data);
           const link = document.createElement("a");
           link.href = dowmloadUrl;
-          link.download = `集团告警日志导出表.xlsx`;
+          link.download = `子系统告警日志导出表.xlsx`;
           link.click();
           link.remove();
           window.URL.revokeObjectURL(res);

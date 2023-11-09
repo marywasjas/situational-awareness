@@ -79,7 +79,7 @@ const actions = {
             path: '/',
             component: Layout,
             redirect: '/alarm',
-            meta: { title: '告警列表', icon: 'el-icon-message-solid', affix: true },
+            meta: { title: '集团告警列表', icon: 'el-icon-message-solid', affix: true },
             children: [...listRoute,
               {
                 path: 'alarm',
@@ -100,6 +100,40 @@ const actions = {
                 name: 'Device',
                 meta: { title: '设备管理', affix: true, icon: 'el-icon-setting', }
               }
+            ]
+          },
+          {
+            path: '/alarmSub',
+            component: Layout,
+            redirect: '/alarmSub',
+            meta: { title: '子公司告警列表', icon: 'el-icon-bell', affix: true },
+            children: [{
+              path: `subAlarmDeviceYh`,
+              component: () => import('@/views/alarmSub/device'),
+              name: `SubAlarmDeviceYh`,
+              meta: { title: '光大银行', key: 'YH', affix: true }
+            }, {
+              path: `subAlarmDeviceZq`,
+              component: () => import('@/views/alarmSub/device'),
+              name: `SubAlarmDeviceZq`,
+              meta: { title: '光大证券', key: 'ZQ', affix: true }
+            }, {
+              path: `subAlarmDeviceBx`,
+              component: () => import('@/views/alarmSub/device'),
+              name: `SubAlarmDeviceBx`,
+              meta: { title: '光大保险', key: 'BX', affix: true }
+            }, {
+              path: `subAlarmDeviceXt`,
+              component: () => import('@/views/alarmSub/device'),
+              name: `SubAlarmDeviceXt`,
+              meta: { title: '光大信托', key: 'XT', affix: true }
+            },
+            {
+              path: 'alarmSub',
+              component: () => import('@/views/alarmSub/index'),
+              name: 'AlarmSub',
+              meta: { title: '全部', affix: true }
+            }
             ]
           },
         ]
