@@ -226,7 +226,7 @@ export default {
         },
         {
           id: "institutionShort",
-          label: "所属公司简称(权属单位)",
+          label: "权属单位",
         },
         {
           id: "sourceIp",
@@ -274,7 +274,7 @@ export default {
         },
         {
           id: "attackLevel",
-          label: "攻击告警级别",
+          label: "告警级别",
         },
         {
           id: "attackType_name",
@@ -320,12 +320,12 @@ export default {
       checkedTableColumnList: [
         "序号",
         "发生告警时间",
-        "所属公司简称(权属单位)",
+        "权属单位",
         "源ip",
         "目的ip",
         "关联业务",
         "告警类型",
-        "攻击告警级别",
+        "告警级别",
         "告警详情",
         "攻击结果",
         "告警设备",
