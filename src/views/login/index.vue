@@ -60,6 +60,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { login } from '@/api/user'
 
 export default {
   name: 'Login',
@@ -93,13 +94,15 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      query: ""
     }
   },
   watch: {
     $route: {
       handler: function(route) {
         const query = route.query
+        this.query = query
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
@@ -110,6 +113,24 @@ export default {
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    login({ code: this.query, state: "z1pvSJ" }).then(res => {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm)
+            .then(() => {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.loading = false
+            })
+            .catch(() => {
+              this.loading = false
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }).catch(() => {})
   },
   mounted() {
     if (this.loginForm.username === '') {
