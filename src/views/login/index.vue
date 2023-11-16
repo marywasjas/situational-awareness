@@ -1,10 +1,22 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <el-form
+      ref="loginForm"
+      v-loading="loginLoading"
+      v-loading.fullscreen.lock="true"
+      element-loading-text="Loading......"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
 
-      <div class="title-container">
+      <!-- <div class="title-container">
         <h3 class="title">Login Form</h3>
-      </div>
+      </div> -->
 
       <el-form-item prop="username">
         <span class="svg-container">
@@ -45,14 +57,14 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <!-- <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
       <div style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
           <span>Password : any</span>
         </div>
-      </div>
+      </div> -->
     </el-form>
 
   </div>
@@ -60,7 +72,8 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { login } from '@/api/user'
+import { getAlarmDevice } from '@/api/alarm'
+import { login } from "@/api/user"
 
 export default {
   name: 'Login',
@@ -95,14 +108,15 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      query: ""
+      code: "", // code 查询
+      state: "", // state 查询
+      loginLoading: true
     }
   },
   watch: {
     $route: {
       handler: function(route) {
         const query = route.query
-        this.query = query
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
@@ -112,25 +126,46 @@ export default {
     }
   },
   created() {
+    // login({ code: "111", state: "222" })
+    //   .then(res => {
+    //     this.loginLoading = false
+    //     this.handleLogin({ ...this.loginForm, username: res })
+    //   })
+    //   .catch(() => {
+    //     this.loginLoading = false
+    //   })
+
     // window.addEventListener('storage', this.afterQRScan)
-    login({ code: this.query, state: "z1pvSJ" }).then(res => {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    }).catch(() => {})
+
+    this.code = this.$route.query.code
+    this.state = this.$route.query.state
+    console.log(this.code, this.state)
+
+    if (!this.code) {
+      getAlarmDevice()
+        .then(res => {
+          if (res?.code !== 401) {
+            login({ code: this.code, state: this.state })
+              .then(res => {
+                this.loginLoading = false
+                this.handleLogin({ ...this.loginForm, username: res })
+              })
+              .catch(() => {
+                this.loginLoading = false
+              })
+          }
+        })
+        .catch(() => {})
+    } else {
+      login({ code: this.code, state: this.state })
+        .then(res => {
+          this.loginLoading = false
+          this.handleLogin({ ...this.loginForm, username: res })
+        })
+        .catch(() => {
+          this.loginLoading = false
+        })
+    }
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -157,11 +192,11 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
+    handleLogin(obj) {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
+          this.$store.dispatch('user/login', obj)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
