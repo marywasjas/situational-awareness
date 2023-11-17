@@ -28,6 +28,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
+          <span style="margin-right:10px">{{ token }}</span>
           <i class="el-icon-user user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
@@ -76,14 +77,17 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
+      'device',
+      'token'
     ])
   },
+  // eslint-disable-next-line vue/order-in-components
   data() {
     return {
       title: '网络安全态势感知平台',
       logoSrc,
-      routerName: ''
+      routerName: '',
+      currentURL: '' // 定义一个变量用于存储当前的 URL
     }
   },
   created() {
@@ -95,7 +99,37 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      // window.onpopstate = function(event) {
+      //   history.replaceState(null, null, window.location.href);
+      // };
+      // console.log(window.history)
+      // window.location.replace('about:blank')
+      // window.location.replace('')
+      // window.history.pushState(null, null, 'about:blank')
+      // window.history.go(-2);
+      // window.opener = null;
+      // window.open("", "_self")
+      // res.close();
+
+      window.location.replace('about:blank')
+      // window.history.forward()
+      window.close();
+      // this.closePage()
+    },
+    // 关闭页面
+    closePage () {
+      console.log(navigator.userAgent)
+      // if (navigator.userAgent.indexOf('Firefox') !== -1 || navigator.userAgent.indexOf('Chrome') !== -1) {
+      //   window.location.href = 'about:blank'
+      //   window.close()
+      // } else {
+      window.opener = null
+      const res = window.open('', '_blank', '')
+      setTimeout(() => {
+        res.close()
+      }, 5000)
+      // }
     }
   }
 }

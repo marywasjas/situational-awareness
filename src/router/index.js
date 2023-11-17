@@ -60,6 +60,14 @@ export const constantRoutes = [
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
+  // 可视化大屏
+  {
+    path: '/large-screen',
+    name: 'LargeScreen',
+    component: () => import('@/views/large-screen/index'),
+    meta: { title: '可视化大屏', icon: 'el-icon-s-platform', affix: true },
+    hidden: false
+  },
   {
     path: '/404',
     component: () => import('@/views/error-page/404'),

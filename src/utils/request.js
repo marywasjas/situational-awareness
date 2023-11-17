@@ -51,7 +51,7 @@ service.interceptors.response.use(
       } else if (res.code === 401) {
         console.log("code == 401", res)
         if (res.message === "用户尚未登录") {
-          window.location.replace("http://iamtest.ebchina.com/4a-app/oauth/authorize?client_id=fac638db-860f-433e-924f-3ffdff0de8a2&redirect_uri=http://localhost:9527/login&response_type=code&scope=sso:*&state=z1pvSJ");
+          window.location.replace("http://iamtest.ebchina.com/4a-app/oauth/authorize?client_id=fac638db-860f-433e-924f-3ffdff0de8a2&redirect_uri=http://localhost:9527/%23/login&response_type=code&scope=sso:*&state=z1pvSJ");
           return res
         } else if (res.message === "登录已过期") {
           window.location.replace("http://iamtest.ebchina.com");

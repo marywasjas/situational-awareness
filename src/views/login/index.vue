@@ -19,9 +19,9 @@
       </div> -->
 
       <el-form-item prop="username">
-        <span class="svg-container">
+        <!-- <span class="svg-container">
           <svg-icon icon-class="user" />
-        </span>
+        </span> -->
         <el-input
           ref="username"
           v-model="loginForm.username"
@@ -30,14 +30,15 @@
           type="text"
           tabindex="1"
           autocomplete="on"
+          style="visibility:hidden"
         />
       </el-form-item>
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
-          <span class="svg-container">
+          <!-- <span class="svg-container">
             <svg-icon icon-class="password" />
-          </span>
+          </span> -->
           <el-input
             :key="passwordType"
             ref="password"
@@ -47,13 +48,14 @@
             name="password"
             tabindex="2"
             autocomplete="on"
+            style="visibility:hidden"
             @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
-          <span class="show-pwd" @click="showPwd">
+          <!-- <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
+          </span> -->
         </el-form-item>
       </el-tooltip>
 
@@ -144,6 +146,7 @@ export default {
     if (!this.code) {
       getAlarmDevice()
         .then(res => {
+          console.log(res)
           if (res?.code !== 401) {
             login({ code: this.code, state: this.state })
               .then(res => {
