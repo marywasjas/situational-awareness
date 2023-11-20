@@ -20,7 +20,10 @@ export default {
     }
   },
   mounted() {
-    window.location.replace("http://25.11.5.1/#/aj/kZMtOzJc")
+    this.$router.go(-1)
+    window.open("http://25.11.5.1/#/aj/kZMtOzJc", "_black")
+
+    // window.location.replace("http://25.11.5.1/#/aj/kZMtOzJc")
     // window.location.replace("https://www.baidu.com/")
   },
 
